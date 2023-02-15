@@ -1,22 +1,12 @@
-How to build PlatformIO based project
-=====================================
+this is my playground fro the Raspberry Pico rp2040
 
-1. [Install PlatformIO Core](https://docs.platformio.org/page/core.html)
-2. Download [development platform with examples](https://github.com/platformio/platform-raspberrypi/archive/develop.zip)
-3. Extract ZIP archive
-4. Run these commands:
+it uses to following hardware
 
-```shell
-# Change directory to example
-$ cd platform-raspberrypi/examples/arduino-blink
+MSH-4.0inch Display B
 
-# Build project
-$ pio run
+4x4 keypad
 
-# Upload firmware
-$ pio run --target upload
-
-# Clean build files
-$ pio run --target clean
-```
-# rp2040_LCD_touch
+The goal is
+- get the dispaly to work
+- react on touch
+- read keypad via PIO

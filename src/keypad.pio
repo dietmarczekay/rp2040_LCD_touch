@@ -1,0 +1,27 @@
+; in the c-program the 'set' pins are the 4 output pins to the 4x4 button matrix
+; in the c-program the 'in' pins are the 4 input pins from the 4x4 button matrix, these are pulled_down
+
+.program button_matrix
+
+start:
+    set pins 1 [15]  ; set 0001 on the 4 output pins (activate first row) and wait for the signal to stabilize
+    in pins 4        ; shift the input pins into the ISR
+    set pins 2 [15]  ; set 0010 on the 4 output pins (activate second row) and wait for the signal to stabilize
+    in pins 4        ; shift the input pins into the ISR
+    set pins 4 [15]  ; set 0100 on the 4 output pins (activate third row) and wait for the signal to stabilize
+    in pins 4        ; shift the input pins into the ISR
+    set pins 8 [15]  ; set 1000 on the 4 output pins (activate fourth row) and wait for the signal to stabilize
+    in pins 4        ; shift the input pins into the ISR
+    mov X ISR        ; copy the ISR into the x scratch register
+    jmp !X start     ; if the x contains 0, no key was pressed, start over
+    push noblock     ; a key was pressed, push the ISR into the RX FIFO
+    irq wait 0
+    set X 31
+warten:
+    jmp X-- warten
+    set pins 15 [5]    ; set all rows high to get the column mask
+    mov Y pins [2]  ; move column mask to Y register
+looper:
+    mov X pins [12]  ; move the column mask to X and compare with Y, if key released, the mask is different
+    jmp X!=Y start  ; if registers are not the same, go to start
+    jmp looper        ; if not, stay in the loop
